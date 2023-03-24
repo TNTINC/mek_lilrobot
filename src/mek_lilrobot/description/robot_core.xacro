@@ -1,6 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
+    <xacro:include filename="inertial_macros.xacro"/>
+
     <material name="white">
         <color rgba="1 1 1 1" />
     </material>
@@ -26,14 +28,21 @@
             </geometry>
             <material name="white" />
         </visual>
+        <collision>
+            <geometry>
+                <box size="0.1222 0.10825 0.005" />
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="0.5" x="0.1222" y="0.10825" z="0.005">
+            <origin xyz="0 0 0" rpy="0 0 0" />
+        </xacro:inertial_box>
     </link>
 
-    <!--<joint name="right_wheel_joint" type="continuous">
-        <parent link="base_link" />
-        <child link="right_wheel" />
-        <origin xyz="0 -0.0675 0.02175" rpy="1.57079632679 0 0"/>
-        <axis xyz="0 0 -1"/>
-    </joint>-->
+    <gazebo reference="chassis">
+        <material>Gazebo/White</material>
+    </gazebo>
+
+
 
     <joint name="right_wheel_joint" type="continuous">
         <parent link="base_link" />
@@ -49,7 +58,19 @@
             </geometry>
             <material name="black"/>
         </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.02175" length="0.009"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.05" radius="0.02175" length="0.009">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
     </link>
+
+    <gazebo reference="right_wheel">
+        <material>Gazebo/Black</material>
+    </gazebo>
 
     <joint name="left_wheel_joint" type="continuous">
         <parent link="base_link" />
@@ -65,8 +86,19 @@
             </geometry>
             <material name="black"/>
         </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.02175" length="0.009"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.05" radius="0.02175" length="0.009">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
     </link>
 
+    <gazebo reference="left_wheel">
+        <material>Gazebo/Black</material>
+    </gazebo>
     
     <joint name="caster_wheel_joint" type="fixed">
         <parent link="base_link"/>
@@ -81,6 +113,21 @@
             </geometry>
             <material name="black"/>
         </visual>
+        <collision>
+            <geometry>
+                <sphere radius="0.008"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_sphere mass="0.01" radius="0.008">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_sphere>
     </link>
+
+    
+    <gazebo reference="caster_wheel">
+        <material>Gazebo/Black</material>
+        <mu1 value="0.001"/>
+        <mu2 value="0.001"/>
+    </gazebo>
 
 </robot>

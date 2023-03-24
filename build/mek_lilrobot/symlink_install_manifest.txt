@@ -1,5 +1,8 @@
+/home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/description/gazebo_control.xacro
+/home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/description/inertial_macros.xacro
 /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/description/robot.urdf.xacro
 /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/description/robot_core.xacro
+/home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/launch/launch_sim.launch.py
 /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/launch/rsp.launch.py
 /home/ice/dev_ws/install/mek_lilrobot/share/ament_index/resource_index/package_run_dependencies/mek_lilrobot
 /home/ice/dev_ws/install/mek_lilrobot/share/ament_index/resource_index/parent_prefix_path/mek_lilrobot

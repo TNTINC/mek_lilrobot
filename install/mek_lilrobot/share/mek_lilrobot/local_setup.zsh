@@ -1,1 +1,0 @@
-/home/ice/dev_ws/build/mek_lilrobot/ament_cmake_environment_hooks/local_setup.zsh

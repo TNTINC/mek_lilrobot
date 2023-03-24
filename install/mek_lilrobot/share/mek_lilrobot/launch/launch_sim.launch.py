@@ -1,1 +1,0 @@
-/home/ice/dev_ws/src/mek_lilrobot/launch/launch_sim.launch.py

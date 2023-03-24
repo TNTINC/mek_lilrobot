@@ -1,0 +1,18 @@
+-- Install configuration: ""
+-- Execute custom install script
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/launch/rsp.launch.py
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/ament_index/resource_index/package_run_dependencies/mek_lilrobot
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/ament_index/resource_index/parent_prefix_path/mek_lilrobot
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/environment/ament_prefix_path.sh
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/environment/ament_prefix_path.dsv
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/environment/path.sh
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/environment/path.dsv
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/local_setup.bash
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/local_setup.sh
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/local_setup.zsh
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/local_setup.dsv
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/package.dsv
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/ament_index/resource_index/packages/mek_lilrobot
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/cmake/mek_lilrobotConfig.cmake
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/cmake/mek_lilrobotConfig-version.cmake
+-- Symlinking: /home/ice/dev_ws/install/mek_lilrobot/share/mek_lilrobot/package.xml

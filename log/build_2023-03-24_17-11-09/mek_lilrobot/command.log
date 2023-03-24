@@ -1,0 +1,6 @@
+Invoking command in '/home/ice/dev_ws/build/mek_lilrobot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake /home/ice/dev_ws/src/mek_lilrobot -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/ice/dev_ws/install/mek_lilrobot
+Invoked command in '/home/ice/dev_ws/build/mek_lilrobot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake /home/ice/dev_ws/src/mek_lilrobot -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/home/ice/dev_ws/install/mek_lilrobot
+Invoking command in '/home/ice/dev_ws/build/mek_lilrobot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/ice/dev_ws/build/mek_lilrobot -- -j16 -l16
+Invoked command in '/home/ice/dev_ws/build/mek_lilrobot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/ice/dev_ws/build/mek_lilrobot -- -j16 -l16
+Invoking command in '/home/ice/dev_ws/build/mek_lilrobot': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/ice/dev_ws/build/mek_lilrobot
+Invoked command in '/home/ice/dev_ws/build/mek_lilrobot' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/ice/dev_ws/build/mek_lilrobot

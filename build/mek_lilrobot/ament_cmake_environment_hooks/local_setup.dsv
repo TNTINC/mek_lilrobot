@@ -1,0 +1,2 @@
+source;share/mek_lilrobot/environment/ament_prefix_path.sh
+source;share/mek_lilrobot/environment/path.sh

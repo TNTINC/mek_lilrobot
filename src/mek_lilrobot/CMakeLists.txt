@@ -32,7 +32,7 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-install(DIRECTORY description launch
+install(DIRECTORY description launch config
   DESTINATION share/${PROJECT_NAME})
 
 ament_package()

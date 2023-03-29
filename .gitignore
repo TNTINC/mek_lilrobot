@@ -24,3 +24,8 @@ log/**
 ./log/
 ./log/*
 ./log/**
+
+.vscode
+.vscode/
+.vscode/*
+.vscode/**

@@ -1,3 +1,6 @@
 [submodule "src/diffdrive_arduino"]
 	path = src/diffdrive_arduino
 	url = https://github.com/TNTINC/diffdrive_arduino
+[submodule "src/serial"]
+	path = src/serial
+	url = https://github.com/joshnewans/serial

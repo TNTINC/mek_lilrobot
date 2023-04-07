@@ -31,28 +31,29 @@ controller_server:
 
     # Progress checker parameters
     progress_checker:
+
       plugin: "nav2_controller::SimpleProgressChecker"
       required_movement_radius: 0.05
-      movement_time_allowance: 10.0
+      movement_time_allowance: 30.0
     # Goal checker parameters
     general_goal_checker:
       stateful: True
       plugin: "nav2_controller::SimpleGoalChecker"
-      xy_goal_tolerance: 0.025
-      yaw_goal_tolerance: 0.1
+      xy_goal_tolerance: 0.005
+      yaw_goal_tolerance: 0.02
     # DWB parameters
     FollowPath:
       plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
       desired_linear_vel: 0.05
-      lookahead_dist: 0.06
+      lookahead_dist: 0.1
       min_lookahead_dist: 0.03
-      max_lookahead_dist: 0.09
+      max_lookahead_dist: 0.1
       lookahead_time: 0.5
-      rotate_to_heading_angular_vel: 1.0
+      rotate_to_heading_angular_vel: 0.5
       transform_tolerance: 0.01
       use_velocity_scaled_lookahead_dist: false
       min_approach_linear_velocity: 0.05
-      approach_velocity_scaling_dist: 0.6
+      approach_velocity_scaling_dist: 0.01
       use_collision_detection: true
       max_allowed_time_to_collision_up_to_carrot: 0.1
       use_regulated_linear_velocity_scaling: true
@@ -63,10 +64,10 @@ controller_server:
       regulated_linear_scaling_min_speed: 0.25
       use_rotate_to_heading: true
       allow_reversing: true
-      rotate_to_heading_min_angle: 0.785
-      max_angular_accel: 3.2
+      rotate_to_heading_min_angle: 0.02
+      max_angular_accel: 100.0
       max_robot_pose_search_dist: 10.0
-      use_interpolation: false
+      use_interpolation: true
 
 
 local_costmap:
@@ -127,7 +128,7 @@ planner_server:
     GridBased:
       plugin: 'nav2_navfn_planner/NavfnPlanner'
       use_astar: True
-      tolerance: 0.01
+      tolerance: 0.005
 
 smoother_server:
   ros__parameters:
@@ -135,7 +136,7 @@ smoother_server:
     simple_smoother:
       plugin: "nav2_smoother::SimpleSmoother"
       tolerance: 1.0e-10
-      max_its: 10
+      max_its: 100
       do_refinement: True
 
 behavior_server:
@@ -159,7 +160,7 @@ behavior_server:
     local_frame: odom
     global_flame: map
     robot_base_frame: base_link
-    transform_tolerance: 0.01
+    transform_tolerance: 0.005
     simulate_ahead_time: 2.0
     max_rotational_vel: 1.0
     min_rotational_vel: 0.4
@@ -180,10 +181,10 @@ velocity_smoother:
     smoothing_frequency: 10.0
     scale_velocities: False
     feedback: "OPEN_LOOP"
-    max_velocity: [0.26, 0.0, 1.0]
-    min_velocity: [-0.26, 0.0, -1.0]
-    max_accel: [2.5, 0.0, 3.2]
-    max_decel: [-2.5, 0.0, -3.2]
+    max_velocity: [1.0, 0.0, 0.5]
+    min_velocity: [-1.0, 0.0, -0.5]
+    max_accel: [2.0, 0.0, 1.0]
+    max_decel: [-2.0, 0.0, -1.0]
     odom_topic: "odom"
     odom_duration: 0.1
     deadband_velocity: [0.0, 0.0, 0.0]

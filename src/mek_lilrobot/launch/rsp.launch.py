@@ -30,12 +30,12 @@ def generate_launch_description():
         parameters=[params]
     )
 
-    node_joint_state_publisher_gui = Node(
-        package='joint_state_publisher_gui',
-        executable='joint_state_publisher_gui',
-        name='joint_state_publisher_gui'
+    # Create a MapOdomTfPublisher node
+    node_mapodomtfpub = Node(
+        package='mek_lilrobot',
+        executable='mapodomtfpub',
+        output='screen',
     )
-
 
     # Launch!
     return LaunchDescription([
@@ -48,5 +48,6 @@ def generate_launch_description():
             default_value='true',
             description='Use ros2_control if true'),
 
-        node_robot_state_publisher
+        node_robot_state_publisher,
+        node_mapodomtfpub,
     ])

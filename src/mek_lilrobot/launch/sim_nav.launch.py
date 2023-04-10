@@ -203,11 +203,6 @@ def generate_launch_description():
         ]
     )
 
-    static_map_pub = Node(
-                package="tf2_ros",
-                executable="static_transform_publisher",
-                arguments=["0","0","0","0","0","0","map","odom"],
-            )
 
     load_composable_nodes = GroupAction(
         condition=IfCondition(use_composition),
@@ -270,11 +265,6 @@ def generate_launch_description():
         ]
     )
 
-    gazebo = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory("mek_lilrobot"),'launch','launch_sim.launch.py'
-                )]))
-
     # Create the launch description and populate
     ld = LaunchDescription()
 
@@ -291,11 +281,7 @@ def generate_launch_description():
     ld.add_action(declare_use_respawn_cmd)
     ld.add_action(declare_log_level_cmd)
     # Add the actions to launch all of the navigation nodes
-    ld.add_action(static_map_pub)
     ld.add_action(load_nodes)
     ld.add_action(load_composable_nodes)
-
-    # Add action to launch the simulation environment
-    ld.add_action(gazebo)
 
     return ld

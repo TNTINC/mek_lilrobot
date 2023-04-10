@@ -12,13 +12,12 @@
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 #include "tf2/convert.h"
 
-/*
+/* Todo
  * [X] Publish map -> odom transform
  * [X] Allow resetting map->odom transform
- * [ ] Host state machine (search -> aquire -> return)
  */
 using namespace std::placeholders;
-class Robot : public rclcpp::Node {
+class MapOdomTfPub : public rclcpp::Node {
     using TransformStamped = geometry_msgs::msg::TransformStamped;
     using Empty_Response = std_srvs::srv::Empty_Response;
     using Empty_Request = std_srvs::srv::Empty_Request;
@@ -30,7 +29,7 @@ class Robot : public rclcpp::Node {
     std::shared_ptr<rclcpp::Service<std_srvs::srv::Empty>> reset_odom_srv;
 
     public:
-    Robot() : Node("robot") {
+    MapOdomTfPub() : Node("map_odom_tf_pub") {
         // map -> odom transform broadcaster
         auto qos_profile = rmw_qos_profile_default;
         qos_profile.durability = RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL;
@@ -50,12 +49,11 @@ class Robot : public rclcpp::Node {
 
         // Service to set map->odom such that map->base_link = 0,0,0 0,0,0,0
         reset_odom_srv = this->create_service<std_srvs::srv::Empty>(
-            "/robot/reset_odom", std::bind(&Robot::reset_odom, this, _1, _2, _3));
+            "/robot/reset_odom", std::bind(&MapOdomTfPub::reset_odom, this, _1, _2, _3));
         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Node constructor finished");
     }
 
     private:
-
     // Service handler, sets the map->odom transform such that map->base_link = 0,0,0 0,0,0,0
     void reset_odom(
         const std::shared_ptr<rmw_request_id_t> hdr,
@@ -85,7 +83,7 @@ class Robot : public rclcpp::Node {
 int main(int argc, char* argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<Robot>());
+  rclcpp::spin(std::make_shared<MapOdomTfPub>());
   rclcpp::shutdown();
   return 0;
 }

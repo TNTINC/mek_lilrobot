@@ -20,8 +20,8 @@ find_package(geometry_msgs)
 find_package(tf2_geometry_msgs)
 find_package(std_srvs)
 
-add_executable(robot src/robot.cpp)
-ament_target_dependencies( robot 
+add_executable(mapodomtfpub src/MapOdomTfPub.cpp)
+ament_target_dependencies( mapodomtfpub 
   rclcpp
   std_msgs
   tf2
@@ -31,7 +31,7 @@ ament_target_dependencies( robot
   std_srvs
 )
 
-install(TARGETS robot 
+install(TARGETS mapodomtfpub 
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY description launch config worlds

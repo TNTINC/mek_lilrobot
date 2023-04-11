@@ -91,8 +91,21 @@ def generate_launch_description():
     )
 
     delayed_nav2 = RegisterEventHandler(
+        event_handler=OnProcessExit(target_action=joint_broad_spawner, on_exit=[nav2])
+    )
+
+    # Launch the object tracker
+    object_tracker = Node(
+        package="object_tracker",
+        executable="object_tracker",
+        remappings=[
+            ("/image_in", "/camera/image_raw"),
+        ],
+    )
+
+    delayed_object_tracker = RegisterEventHandler(
         event_handler=OnProcessExit(
-            target_action=joint_broad_spawner, on_exit=[nav2]
+            target_action=joint_broad_spawner, on_exit=[object_tracker]
         )
     )
 
@@ -105,5 +118,6 @@ def generate_launch_description():
             delayed_spawn_jb,
             delayed_spawn_dc,
             delayed_nav2,
+            delayed_object_tracker,
         ]
     )

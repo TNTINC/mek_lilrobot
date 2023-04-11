@@ -1,20 +1,17 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>mek_lilrobot</name>
+  <name>mek_lilrobot_interfaces</name>
   <version>0.0.0</version>
-  <description>Package to run the little robot for MEK605G</description>
-  <maintainer email="fmt1@hi.is">Fridfinnur M</maintainer>
+  <description>Actions for mek_lilrobot</description>
+  <maintainer email="notandinotandi@gmail.com">ice</maintainer>
   <license>All rights reserved</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>rclcpp</depend>
-  <depend>tf2</depend>
-  <depend>tf2_ros</depend>
-  <depend>geometry_msgs</depend>
-  <depend>tf2_geometry_msgs</depend>
-  <depend>mek_lilrobot_interfaces</depend>
+  <depend>action_msgs</depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
+  <depend>std_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

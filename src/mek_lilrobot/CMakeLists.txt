@@ -7,7 +7,7 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+  add_compile_options(-Wall -Wextra -Wpedantic -Wfatal-errors)
 endif()
 
 # find dependencies
@@ -19,6 +19,7 @@ find_package(tf2_ros)
 find_package(geometry_msgs)
 find_package(tf2_geometry_msgs)
 find_package(std_srvs)
+find_package(mek_lilrobot_interfaces REQUIRED)
 
 add_executable(mapodomtfpub src/MapOdomTfPub.cpp)
 ament_target_dependencies( mapodomtfpub 
@@ -31,7 +32,19 @@ ament_target_dependencies( mapodomtfpub
   std_srvs
 )
 
-install(TARGETS mapodomtfpub 
+add_executable(robot src/Robot.cpp)
+ament_target_dependencies( robot
+  rclcpp
+  std_msgs
+  tf2
+  tf2_ros
+  geometry_msgs
+  tf2_geometry_msgs
+  std_srvs
+  mek_lilrobot_interfaces
+)
+
+install(TARGETS mapodomtfpub robot
   DESTINATION lib/${PROJECT_NAME})
 
 install(DIRECTORY description launch config worlds

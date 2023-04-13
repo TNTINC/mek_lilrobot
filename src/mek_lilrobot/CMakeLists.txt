@@ -21,6 +21,7 @@ find_package(tf2_geometry_msgs)
 find_package(std_srvs)
 find_package(mek_lilrobot_interfaces REQUIRED)
 find_package(nav2_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 add_executable(mapodomtfpub src/MapOdomTfPub.cpp)
 ament_target_dependencies( mapodomtfpub 
@@ -44,6 +45,7 @@ ament_target_dependencies( robot
   std_srvs
   mek_lilrobot_interfaces
   nav2_msgs
+  sensor_msgs
 )
 
 install(TARGETS mapodomtfpub robot

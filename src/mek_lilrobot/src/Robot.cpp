@@ -4,6 +4,7 @@
 #include "nav2_msgs/action/navigate_to_pose.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
+#include "sensor_msgs/msg/range.hpp"
 #include "std_srvs/srv/empty.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 #include "tf2_ros/buffer.h"
@@ -41,6 +42,7 @@ class Robot : public rclcpp::Node {
     std::shared_ptr<rclcpp::Client<std_srvs::srv::Empty>> reset_odom_client;
     std::condition_variable nav2_result_cv;
     std::mutex nav2_result_mutex;
+    std::shared_ptr<rclcpp::Subscription<sensor_msgs::msg::Range>> laser_sub;
 
 public:
     Robot() : Node("robot") {
@@ -61,7 +63,7 @@ public:
         }
         // subcriber to get detection info
         this->det_sub = this->create_subscription<geometry_msgs::msg::Point>(
-            "det_deviation", 1, std::bind(&Robot::det_callback, this, _1));
+            "det_deviation", 1, [](const geometry_msgs::msg::Point::SharedPtr msg) { (void)msg; });
         // Action server to execute the mission
         this->action_server = rclcpp_action::create_server<DoMission>(
             this,
@@ -71,6 +73,9 @@ public:
             std::bind(&Robot::handle_accepted, this, _1));
         // Client to reset odometry
         this->reset_odom_client = this->create_client<std_srvs::srv::Empty>("/robot/reset_odom");
+        // Laser range sensor subscriber
+        this->laser_sub = this->create_subscription<sensor_msgs::msg::Range>(
+            "laser", 1, [](const sensor_msgs::msg::Range::SharedPtr msg) { (void)msg; });
     }
 
 private:
@@ -94,7 +99,8 @@ private:
     }
 
     void det_callback(const geometry_msgs::msg::Point::SharedPtr msg) {
-        RCLCPP_INFO(this->get_logger(), "Got detection: (%f, %f, %f)", msg->x, msg->y, msg->z);
+        (void)msg;
+        // RCLCPP_INFO(this->get_logger(), "Got detection: (%f, %f, %f)", msg->x, msg->y, msg->z);
     }
 
     void nav2_result_callback(
@@ -169,6 +175,36 @@ private:
         this->send_nav2_goal(goal_pose);
     }
 
+    void turn_to_face_detection() {
+        // Get detection
+        geometry_msgs::msg::Point det;
+        rclcpp::MessageInfo info;
+        while (rclcpp::ok() && !this->det_sub->take(det, info))
+            ;
+        RCLCPP_INFO(this->get_logger(), "Turning to face detection with x: %f", det.x);
+        int count = 0;
+        while (fabs(det.x) > 5 / 480.0 && count++ < 4) {
+            auto error = det.x;
+            // Approximate turn required at deviation = 1 is horizontal fov/2 = ~27° = ~0.47 rad
+            // Underestimating the turn required is better than overestimating to avoid oscillation
+            // Negative error means the detection is to the left, so turn left (positive turn)
+            auto turn = -error * 0.47 * 0.95;
+            this->turn(turn);
+
+            // Get new detection
+            while (rclcpp::ok() && !this->det_sub->take(det, info))
+                ;
+        }
+    }
+
+    double get_laser_range() {
+        sensor_msgs::msg::Range msg;
+        rclcpp::MessageInfo info;
+        while (rclcpp::ok() && !this->laser_sub->take(msg, info))
+            ;
+        return msg.range;
+    }
+
     void execute(const std::shared_ptr<GoalHandle> goal_handle) {
         RCLCPP_INFO(this->get_logger(), "Executing mission");
         auto feedback = std::make_shared<DoMission::Feedback>();
@@ -208,33 +244,11 @@ private:
         feedback->state = "approach";
         goal_handle->publish_feedback(feedback);
 
-        // Get detection
-        geometry_msgs::msg::Point det;
-        rclcpp::MessageInfo info;
-        while (rclcpp::ok() && !this->det_sub->take(det, info))
-            ;
-        // Turn to face detection
-        RCLCPP_INFO(this->get_logger(), "Turning to face detection with x: %f", det.x);
-        while (fabs(det.x) > 2 / 480.0) {
-            auto error = det.x;
-            // Approximate turn required at deviation = 1 is horizontal fov/2 = ~27° = ~0.47 rad
-            // Underestimating the turn required is better than overestimating to avoid oscillation
-            // Negative error means the detection is to the left, so turn left (positive turn)
-            auto turn = -error * 0.47 * 0.95;
-            this->turn(turn);
-
-            // Get new detection
-            while (rclcpp::ok() && !this->det_sub->take(det, info))
-                ;
-        }
-
-        // Drive towards detection until it is in the lower quarter of the frame
-        while (rclcpp::ok() && det.y < 0.5) {
-            RCLCPP_INFO(this->get_logger(), "Approaching detection with y: %f", det.y);
+        // Turn to face detection, then drive forward in steps until its in laser range,
+        // regularly adjusting to face it well
+        while (this->get_laser_range() > 0.09) {
+            this->turn_to_face_detection();
             this->drive(0.1);
-            // Get new detection
-            while (rclcpp::ok() && !this->det_sub->take(det, info))
-                ;
         }
 
         RCLCPP_INFO(this->get_logger(), "End of execute()");

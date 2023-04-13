@@ -64,16 +64,26 @@
         </visual>
         <collision>
             <geometry>
-                <cylinder radius="0.02175" length="0.009"/>
+                <sphere radius="0.02175"/>
             </geometry>
+            <surface>
+                <contact>
+                    <ode>
+                        <kp>1e15</kp>
+                        <kd>1e13</kd>
+                    </ode>
+                </contact>
+            </surface>
         </collision>
-        <xacro:inertial_cylinder mass="0.05" radius="0.02175" length="0.009">
+        <xacro:inertial_cylinder mass="0.5" radius="0.02175" length="0.009">
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_cylinder>
     </link>
 
     <gazebo reference="right_wheel">
         <material>Gazebo/Black</material>
+        <mu1 value="0.8"/>
+        <mu2 value="0.8"/>
     </gazebo>
 
     <joint name="left_wheel_joint" type="continuous">
@@ -92,16 +102,27 @@
         </visual>
         <collision>
             <geometry>
-                <cylinder radius="0.02175" length="0.009"/>
+                <sphere radius="0.02175"/>
             </geometry>
+            <surface>
+                <contact>
+                    <ode>
+                        <kp>1e15</kp>
+                        <kd>1e13</kd>
+                    </ode>
+                </contact>
+            </surface>
         </collision>
-        <xacro:inertial_cylinder mass="0.05" radius="0.02175" length="0.009">
+        <xacro:inertial_cylinder mass="0.5" radius="0.02175" length="0.009">
             <origin xyz="0 0 0" rpy="0 0 0"/>
         </xacro:inertial_cylinder>
+        
     </link>
 
     <gazebo reference="left_wheel">
         <material>Gazebo/Black</material>
+        <mu1 value="0.8"/>
+        <mu2 value="0.8"/>
     </gazebo>
     
     <joint name="caster_wheel_joint" type="fixed">
@@ -231,7 +252,7 @@
                     <remapping>~/out:=laser</remapping>
                 </ros>
                 <output_type>sensor_msgs/Range</output_type>
-                <!-- <frame_name> ommited, will default to range_link -->
+                <frame_name>laser_link</frame_name>
             </plugin>
         </sensor>
     </gazebo>

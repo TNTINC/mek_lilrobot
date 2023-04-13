@@ -7,6 +7,11 @@
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1</real_time_factor>
       <real_time_update_rate>1000</real_time_update_rate>
+      <ode>
+        <solver>
+          <iters>300</iters>
+        </solver>
+      </ode>
     </physics>
     <scene>
       <ambient>0.4 0.4 0.4 1</ambient>
@@ -25,7 +30,7 @@
       <heading_deg>0</heading_deg>
     </spherical_coordinates>
     <model name='my_model'>
-      <pose>1.05636 -1.09125 0.5 0 -0 0</pose>
+      <pose>0.255 0.293 -0.001 0.0 0.0 -1.5707</pose>
       <static>1</static>
       <link name='link'>
         <collision name='collision'>
@@ -37,7 +42,12 @@
           <max_contacts>10</max_contacts>
           <surface>
             <contact>
-              <ode/>
+              <ode>
+                <mu>0.8</mu>
+                <mu2>0.8</mu2>
+                <kp>1e15</kp>
+                <kd>1e13</kd>
+              </ode>
             </contact>
             <bounce/>
             <friction>
@@ -81,13 +91,13 @@
     <state world_name='default'>
       <sim_time>0 0</sim_time>
       <real_time>0 0</real_time>
-      <wall_time>1680197735 511812257</wall_time>
+      <wall_time>1681356194 733384125</wall_time>
       <iterations>0</iterations>
       <model name='my_model'>
-        <pose>0 0 0 0 -0 0</pose>
+        <pose>0.255 0.293 -0.001 0.0 0.0 -1.5707</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>0 0 0 0 -0 0</pose>
+          <pose>0.255 0.293 -0.001 0.0 0.0 -1.5707</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -99,7 +109,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>-0.960237 2.07429 1.3087 0 0.605798 -1.03978</pose>
+        <pose>-0.204841 0.022668 4.2047 -4e-06 1.5698 -0.16378</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>

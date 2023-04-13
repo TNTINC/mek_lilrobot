@@ -40,7 +40,7 @@ def generate_launch_description():
             ]
         ),
         launch_arguments={
-            #'world':os.path.join(get_package_share_directory(package_name),'worlds','arena.sdf'),
+            'world':os.path.join(get_package_share_directory(package_name),'worlds','arena.sdf'),
             "extra_gazebo_args": "--ros-args --params-file "
             + gazebo_params_path
         }.items(),

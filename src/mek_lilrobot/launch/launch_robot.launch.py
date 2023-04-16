@@ -2,7 +2,6 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 
-
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, TimerAction, RegisterEventHandler
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -13,10 +12,7 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
-    # Include the robot_state_publisher launch file, provided by our own package.
-    # !!! MAKE SURE YOU SET THE PACKAGE NAME CORRECTLY !!!
-
-    package_name = "mek_lilrobot"  # <--- CHANGE ME
+    package_name = "mek_lilrobot"
 
     rsp = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -36,7 +32,7 @@ def generate_launch_description():
     controller_params = os.path.join(
         get_package_share_directory(
             "mek_lilrobot"
-        ),  # <-- Replace with your package name
+        ),
         "config",
         "controllers.yaml",
     )
@@ -60,6 +56,7 @@ def generate_launch_description():
         executable="spawner",
         arguments=["joint_broad"],
     )
+
 
     delayed_diff_drive_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
@@ -107,6 +104,8 @@ def generate_launch_description():
     )
 
     # Spawn camera driver
+
+    # Spawn laser 
     
 
     # Launch them all!
@@ -116,7 +115,7 @@ def generate_launch_description():
             delayed_controller_manager,
             delayed_diff_drive_spawner,
             delayed_joint_broad_spawner,
-            delayed_nav2,
-            delayed_object_tracker,
+            #delayed_nav2,
+            #delayed_object_tracker,
         ]
     )

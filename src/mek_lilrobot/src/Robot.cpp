@@ -5,6 +5,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "sensor_msgs/msg/range.hpp"
+#include "std_msgs/msg/float64_multi_array.hpp"
 #include "std_srvs/srv/empty.hpp"
 #include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
 #include "tf2_ros/buffer.h"
@@ -43,6 +44,7 @@ class Robot : public rclcpp::Node {
     std::condition_variable nav2_result_cv;
     std::mutex nav2_result_mutex;
     std::shared_ptr<rclcpp::Subscription<sensor_msgs::msg::Range>> laser_sub;
+    std::shared_ptr<rclcpp::Publisher<std_msgs::msg::Float64MultiArray>> gripper_pub;
 
 public:
     Robot() : Node("robot") {
@@ -76,6 +78,10 @@ public:
         // Laser range sensor subscriber
         this->laser_sub = this->create_subscription<sensor_msgs::msg::Range>(
             "laser", 1, [](const sensor_msgs::msg::Range::SharedPtr msg) { (void)msg; });
+        // Gripper publisher
+        this->gripper_pub =
+            this->create_publisher<std_msgs::msg::Float64MultiArray>("gripper_cont/commands", 1);
+        RCLCPP_INFO(this->get_logger(), "Robot node initialized");
     }
 
 private:
@@ -175,6 +181,18 @@ private:
         this->send_nav2_goal(goal_pose);
     }
 
+    void open_gripper() {
+        auto msg = std_msgs::msg::Float64MultiArray();
+        msg.data = {-0.1};
+        this->gripper_pub->publish(msg);
+    }
+
+    void close_gripper() {
+        auto msg = std_msgs::msg::Float64MultiArray();
+        msg.data = {0.1};
+        this->gripper_pub->publish(msg);
+    }
+
     void turn_to_face_detection() {
         // Get detection
         geometry_msgs::msg::Point det;
@@ -210,6 +228,9 @@ private:
         auto feedback = std::make_shared<DoMission::Feedback>();
         auto result = std::make_shared<DoMission::Result>();
 
+        // Make sure gripper is open
+        this->open_gripper();
+
         // Reset odometry
         RCLCPP_INFO(this->get_logger(), "Resetting odometry");
         auto odom_res = reset_odom_client->async_send_request(
@@ -239,6 +260,14 @@ private:
             }
         }
 
+        // Save color of detected object
+        geometry_msgs::msg::Point det;
+        rclcpp::MessageInfo info;
+        while (rclcpp::ok() && !this->det_sub->take(det, info))
+            ;
+        int col_idx = det.z;
+        
+
         // Enter "Approach" state
         RCLCPP_INFO(this->get_logger(), "Entering approach state");
         feedback->state = "approach";
@@ -246,11 +275,45 @@ private:
 
         // Turn to face detection, then drive forward in steps until its in laser range,
         // regularly adjusting to face it well
-        while (this->get_laser_range() > 0.09) {
+        while (this->get_laser_range() > 0.2) {
             this->turn_to_face_detection();
-            this->drive(0.1);
+            this->drive(0.15);
         }
 
+        // Grasp object
+        RCLCPP_INFO(this->get_logger(), "Grasping object");
+        this->drive(this->get_laser_range() - 0.005);
+        this->close_gripper();
+        // todo: wait for gripper to close
+
+        // Enter "Return" state
+        RCLCPP_INFO(this->get_logger(), "Entering return state");
+        feedback->state = "return";
+        goal_handle->publish_feedback(feedback);
+
+        // Drive to appropriate colored square
+        const static double color_offsets[4] = {
+            0.0,   // red
+            0.196, // yellow
+            0.392, // green
+            0.588  // blue
+        };
+        auto col_offset = color_offsets[col_idx];
+        geometry_msgs::msg::PoseStamped goal_pose;
+        goal_pose.header.frame_id = "map";
+        goal_pose.header.stamp = this->get_clock()->now();
+        goal_pose.pose.position.x = 0.0;
+        goal_pose.pose.position.y = col_offset;
+        goal_pose.pose.position.z = 0.0;
+        goal_pose.pose.orientation = tf2::toMsg(tf2::Quaternion(tf2::Vector3(0, 0, 1), 3.1415));
+
+        // Send goal to nav2 (blocking)
+        this->send_nav2_goal(goal_pose);
+
+        // Release object
+        this->open_gripper();
+
+        goal_handle->succeed(result);
         RCLCPP_INFO(this->get_logger(), "End of execute()");
     }
 };

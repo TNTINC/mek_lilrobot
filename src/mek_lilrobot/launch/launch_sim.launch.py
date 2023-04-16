@@ -66,6 +66,12 @@ def generate_launch_description():
         arguments=["joint_broad"],
     )
 
+    gripper_cont_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["gripper_cont"],
+    )
+
     delayed_spawn_dc = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=spawn_entity, on_exit=[diff_drive_spawner]
@@ -74,6 +80,12 @@ def generate_launch_description():
     delayed_spawn_jb = RegisterEventHandler(
         event_handler=OnProcessExit(
             target_action=diff_drive_spawner, on_exit=[joint_broad_spawner]
+        )
+    )
+
+    delayed_spawn_gc = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_broad_spawner, on_exit=[gripper_cont_spawner]
         )
     )
 
@@ -117,6 +129,7 @@ def generate_launch_description():
             spawn_entity,
             delayed_spawn_jb,
             delayed_spawn_dc,
+            delayed_spawn_gc,
             delayed_nav2,
             delayed_object_tracker,
         ]

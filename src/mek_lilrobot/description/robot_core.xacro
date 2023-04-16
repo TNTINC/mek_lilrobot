@@ -22,23 +22,22 @@
     <joint name="chassis_joint" type="fixed">
         <parent link="base_link" />
         <child link="chassis" />
-        <origin xyz="-0.042025 0 0.032925" />
+        <origin xyz="0 0 0" />
     </joint>
 
     <link name="chassis">
         <visual>
             <geometry>
-                <box size="0.1222 0.10825 0.005" />
+                <mesh filename="$(find mek_lilrobot)/description/mek_chassis.stl"/>
             </geometry>
-            <material name="white" />
         </visual>
         <collision>
             <geometry>
-                <box size="0.1222 0.10825 0.005" />
+                <mesh filename="$(find mek_lilrobot)/description/mek_chassis_collision.stl"/>
             </geometry>
         </collision>
-        <xacro:inertial_box mass="0.5" x="0.1222" y="0.10825" z="0.005">
-            <origin xyz="0 0 0" rpy="0 0 0" />
+        <xacro:inertial_box mass="0.8" x="0.1222" y="0.10825" z="0.005">
+            <origin xyz="-0.042 0 0.027" rpy="0 0 0" />
         </xacro:inertial_box>
     </link>
 
@@ -255,6 +254,65 @@
                 <frame_name>laser_link</frame_name>
             </plugin>
         </sensor>
+    </gazebo>
+
+    <!-- Gripper -->
+    <link name="gripper_right_link">
+        <visual>
+            <geometry>
+                <mesh filename="$(find mek_lilrobot)/description/gripper_right_visual.stl"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="$(find mek_lilrobot)/description/gripper_right_collision.stl"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="0.05" x="0.04" y="0.005" z="0.03">
+            <origin xyz="0.020 0 -0.015" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <joint type="revolute" name="gripper_right_joint">
+        <parent link="base_link"/>
+        <child link="gripper_right_link"/>
+        <origin xyz="0.0021 -0.010 0.03175" rpy="0 0 0"/>
+        <axis xyz="0 0 1"/>
+        <limit effort="1" velocity="1" lower="-0.74" upper="0.219"/>
+    </joint>
+
+    <link name="gripper_left_link">
+        <visual>
+            <geometry>
+                <mesh filename="$(find mek_lilrobot)/description/gripper_left_visual.stl"/>
+            </geometry>
+            <material name="white"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="$(find mek_lilrobot)/description/gripper_left_collision.stl"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_box mass="0.05" x="0.04" y="0.005" z="0.03">
+            <origin xyz="0.020 0 0.015" rpy="0 0 0"/>
+        </xacro:inertial_box>
+    </link>
+
+    <joint type="revolute" name="gripper_left_joint">
+        <parent link="base_link"/>
+        <child link="gripper_left_link"/>
+        <origin xyz="0.0021 0.010 0.03175" rpy="${pi} 0 0"/>
+        <axis xyz="0 0 -1"/>
+        <limit effort="1" velocity="1" lower="-0.219" upper="0.74"/>
+    </joint>
+    
+    <gazebo reference="gripper_right_link">
+        <self_collide>1</self_collide>
+    </gazebo>
+
+    <gazebo reference="gripper_left_link">
+        <self_collide>1</self_collide>
     </gazebo>
 
 </robot>

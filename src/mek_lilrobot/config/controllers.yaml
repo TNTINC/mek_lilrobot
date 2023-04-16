@@ -11,6 +11,9 @@ controller_manager:
 
     range_broad:
       type: range_sensor_broadcaster/RangeSensorBroadcaster
+
+    gripper_cont:
+      type: forward_command_controller/ForwardCommandController
     
 diff_cont:
   ros__parameters:
@@ -43,5 +46,11 @@ diff_cont:
         has_acceleration_limits: true
         max_acceleration: 1.0
         min_acceleration: -1.0
+
+gripper_cont:
+  ros__parameters:
+    joints:
+      - gripper_right_joint
+    interface_name: effort
 
 

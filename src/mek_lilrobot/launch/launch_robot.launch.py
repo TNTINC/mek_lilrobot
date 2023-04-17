@@ -57,6 +57,17 @@ def generate_launch_description():
         arguments=["joint_broad"],
     )
 
+    range_broad_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["range_broad"],
+    )
+
+    gripper_cont_spawner = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["gripper_cont"],
+    )
 
     delayed_diff_drive_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
@@ -66,8 +77,20 @@ def generate_launch_description():
     )
     delayed_joint_broad_spawner = RegisterEventHandler(
         event_handler=OnProcessStart(
-            target_action=controller_manager,
+            target_action=diff_drive_spawner,
             on_start=[joint_broad_spawner],
+        )
+    )
+    delayed_rb = RegisterEventHandler(
+        event_handler=OnProcessStart(
+            target_action=controller_manager,
+            on_start=[range_broad_spawner],
+        )
+    )
+    delayed_gc = RegisterEventHandler(
+        event_handler=OnProcessStart(
+            target_action=controller_manager,
+            on_start=[gripper_cont_spawner],
         )
     )
 
@@ -88,25 +111,27 @@ def generate_launch_description():
         event_handler=OnProcessExit(target_action=joint_broad_spawner, on_exit=[nav2])
     )
 
+
+    # Launch the camera driver
+    v4l2_camera = Node(
+        package="v4l2_camera",
+        executable="v4l2_camera_node",
+    )
+
     # Launch the object tracker
     object_tracker = Node(
         package="object_tracker",
         executable="object_tracker",
         remappings=[
-            ("/image_in", "/camera/image_raw"),
+            ("/image_in", "/image_raw"),
         ],
     )
 
-    delayed_object_tracker = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_broad_spawner, on_exit=[object_tracker]
-        )
+    # Launch robot behaviour action server
+    robot_server = Node(
+        package="mek_lilrobot",
+        executable="robot",
     )
-
-    # Spawn camera driver
-
-    # Spawn laser 
-    
 
     # Launch them all!
     return LaunchDescription(
@@ -115,7 +140,11 @@ def generate_launch_description():
             delayed_controller_manager,
             delayed_diff_drive_spawner,
             delayed_joint_broad_spawner,
-            #delayed_nav2,
-            #delayed_object_tracker,
+            delayed_rb,
+            delayed_gc,
+            delayed_nav2,
+            v4l2_camera,
+            object_tracker,
+            robot_server
         ]
     )

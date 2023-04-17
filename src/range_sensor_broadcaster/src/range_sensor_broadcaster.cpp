@@ -25,7 +25,7 @@ CallbackReturn RangeSensorBroadcaster::on_activate(
     const rclcpp_lifecycle::State &previous_state) {
   this->range_pub_ =
       this->get_node()->create_publisher<sensor_msgs::msg::Range>(
-          "laser/range", rclcpp::SensorDataQoS());
+          "laser/range", rclcpp::SystemDefaultsQoS());
   return CallbackReturn::SUCCESS;
 };
 

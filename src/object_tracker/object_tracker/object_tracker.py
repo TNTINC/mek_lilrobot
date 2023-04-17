@@ -8,6 +8,7 @@ from geometry_msgs.msg import Point
 import object_tracker.vision as vision
 
 class ObjectDetector(Node):
+    tuning = True
     def __init__(self):
         super().__init__("object_detector")
 
@@ -16,6 +17,10 @@ class ObjectDetector(Node):
             "/image_in", 
             self.recieve_img, 
             qos_profile_sensor_data)
+        
+        if(self.tuning):
+            self.img_pub = self.create_publisher(Image, "/image_tuning", qos_profile_sensor_data)
+
         self.det_pub = self.create_publisher(Point, "/det_deviation", 1)  
         # Publish X and Y frame coords ([-1,1] with 0,0 at center), with Z representing color
 
@@ -31,6 +36,9 @@ class ObjectDetector(Node):
                 pt.y = detection.y
                 pt.z = float(int(detection.color))
                 self.det_pub.publish(pt)
+            if self.tuning:
+                msg = self.bridge.cv2_to_imgmsg(img, "bgr8")
+                self.img_pub.publish(msg)
         
         except CvBridgeError as e:
             print(e)

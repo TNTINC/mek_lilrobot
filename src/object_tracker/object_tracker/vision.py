@@ -47,7 +47,7 @@ def classify_color(img_bgr, contour) -> Color:
     elif 90 <= mean_hue < 150:
         return Color.BLUE
 
-def process(frame, min_sat=50):
+def process(frame, min_sat=120):
     into_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(into_hsv, np.array([0, min_sat, 0]), np.array([180, 255, 255]))
     cv2.GaussianBlur(mask, (3, 3), 0, mask)
@@ -87,17 +87,17 @@ def process(frame, min_sat=50):
         M = cv2.moments(chosen)
         cx = int(M["m10"] / M["m00"])
         cy = int(M["m01"] / M["m00"])
-        #hull = cv2.convexHull(chosen)
-        #cv2.drawContours(frame, [hull], 0, (0, 0, 255), 1)
-        #cv2.circle(frame, (cx, cy), 3, (255, 0, 0), -1)
+        # hull = cv2.convexHull(chosen)
+        # cv2.drawContours(frame, [hull], 0, (0, 0, 255), 1)
+        # cv2.circle(frame, (cx, cy), 3, (255, 0, 0), -1)
         # cv2.putText(det, f"{area}", (cx, cy), 0, 1, (0,0,255))
-        #cv2.line(frame, (cx, 0), (cx, img_height - 1), (255, 0, 0), 1)
-        #cv2.putText(frame, f"{deviation}", (cx, cy), 0, 0.5, (0, 0, 255))
+        # cv2.line(frame, (cx, 0), (cx, img_height - 1), (255, 0, 0), 1)
+        # cv2.putText(frame, f"{deviation}", (cx, cy), 0, 0.5, (0, 0, 255))
         color = classify_color(frame, chosen)
         x_norm = (cx - img_width / 2) / (640/2)
         y_norm = (cy - img_height / 2) / (480/2)
     except Exception as e:
         print(e)
-    cv2.imshow("Camera", frame)
-    cv2.waitKey(1)
-    return Detection(x_norm, y_norm, color) # x,y coords are [-1,1] with 0,0 at center of img
+    # cv2.imshow("Camera", frame)
+    # cv2.waitKey(1)
+    return Detection(x_norm, y_norm, color)  # x,y coords are [-1,1] with 0,0 at center of img

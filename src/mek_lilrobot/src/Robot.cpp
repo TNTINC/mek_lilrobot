@@ -77,7 +77,7 @@ public:
         this->reset_odom_client = this->create_client<std_srvs::srv::Empty>("/robot/reset_odom");
         // Laser range sensor subscriber
         this->laser_sub = this->create_subscription<sensor_msgs::msg::Range>(
-            "laser", 1, [](const sensor_msgs::msg::Range::SharedPtr msg) { (void)msg; });
+            "/laser/range", 1, [](const sensor_msgs::msg::Range::SharedPtr msg) { (void)msg; });
         // Gripper publisher
         this->gripper_pub =
             this->create_publisher<std_msgs::msg::Float64MultiArray>("gripper_cont/commands", 1);

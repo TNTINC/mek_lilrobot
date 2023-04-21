@@ -5,10 +5,10 @@ from enum import IntEnum
 from dataclasses import dataclass
 
 class Color(IntEnum):
-    RED = 1
-    YELLOW = 2
-    GREEN = 3
-    BLUE = 4
+    RED = 0
+    YELLOW = 1
+    GREEN = 2
+    BLUE = 3
 
 @dataclass
 class Detection:
@@ -47,7 +47,9 @@ def classify_color(img_bgr, contour) -> Color:
     elif 90 <= mean_hue < 150:
         return Color.BLUE
 
-def process(frame, min_sat=120):
+def process(frame, min_sat=70):
+    cv2.rectangle(frame, (0,0),(frame.shape[1], frame.shape[0]//5), (0, 0, 0), -1)  # Mask out top fifth of screen
+    cv2.rectangle(frame, (0, frame.shape[0] - 100), (100, frame.shape[0]), (0,0,0), -1) # Mask out bottom left corner (cables)
     into_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     mask = cv2.inRange(into_hsv, np.array([0, min_sat, 0]), np.array([180, 255, 255]))
     cv2.GaussianBlur(mask, (3, 3), 0, mask)

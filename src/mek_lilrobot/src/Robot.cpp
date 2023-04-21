@@ -201,12 +201,12 @@ private:
             ;
         RCLCPP_INFO(this->get_logger(), "Turning to face detection with x: %f", det.x);
         int count = 0;
-        while (fabs(det.x) > 5 / 480.0 && count++ < 4) {
+        while (fabs(det.x) > 5 / 480.0 && count++ < 2) {
             auto error = det.x;
             // Approximate turn required at deviation = 1 is horizontal fov/2 = ~27° = ~0.47 rad
             // Underestimating the turn required is better than overestimating to avoid oscillation
             // Negative error means the detection is to the left, so turn left (positive turn)
-            auto turn = -error * 0.47 * 0.95;
+            auto turn = -error * 0.50;
             this->turn(turn);
 
             // Get new detection
@@ -293,10 +293,10 @@ private:
 
         // Drive to appropriate colored square
         const static double color_offsets[4] = {
-            0.0,   // red
-            0.196, // yellow
-            0.392, // green
-            0.588  // blue
+            0.196, // 0=red nr 2
+            0.588, // 1=yellow nr. 4
+            0.0,   // 2=green nr 1
+            0.392  // 3=blue nr. 3
         };
         auto col_offset = color_offsets[col_idx];
         geometry_msgs::msg::PoseStamped goal_pose;

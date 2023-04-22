@@ -29,3 +29,5 @@ log/**
 .vscode/
 .vscode/*
 .vscode/**
+
+__pycache__
